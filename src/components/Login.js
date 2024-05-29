@@ -1,12 +1,17 @@
 import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { checkValidData } from "../utils/validate";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {createUserWithEmailAndPassword,signInWithEmailAndPassword, updateProfile} from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [ErrorMessage, setErrorMessage] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const toggleSignInForm = () => {
     //change automatically
@@ -17,16 +22,16 @@ const Login = () => {
   const name = useRef(null);
 
   const handleButtonClick = () => {
-    console.log(email.current.value);
-    console.log(password.current.value);
+    // console.log(email.current.value);
+    // console.log(password.current.value);
     //validate the form data
+
     const message = checkValidData(email.current.value, password.current.value);
     setErrorMessage(message);
 
     if (message) return;
 
-    //Sign //Sign Up
-    if (!isSignInForm) {
+    if (isSignInForm) {
       //sign up logic
       createUserWithEmailAndPassword(
         auth,
@@ -36,18 +41,56 @@ const Login = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL: "https://avatars.githubusercontent.com/u/137712197?v=4",
+          })
+            .then(() => {
+              const { uid, email, displayName, photoURL } = user;
+              //put it up in store
+              dispatch(
+                addUser({
+                  uid: uid,
+                  email: email,
+                  displayName: displayName,
+                  photoURL: photoURL,
+                })
+              );
+              navigate("/browse");
+              // Profile updated!
+              // ...
+            })
+            .catch((error) => {
+              setErrorMessage(error.message);
+            });
           console.log(user);
+
           // ...
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          setErrorMessage(errorMessage + "-" + errorCode)
+          setErrorMessage(errorMessage + "-" + errorCode);
           // ..
         });
     } else {
       //sign in logic
-      
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          navigate("/browse");
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + " " + errorMessage);
+        });
     }
   };
 
@@ -95,7 +138,7 @@ const Login = () => {
           className="p-4 my-4 w-full bg-gray-700 rounded-lg"
         ></input>
 
-        <p className="text-red-500 font-bold text-lg py-2">{ErrorMessage}</p>
+        <p className="text-red-500 font-bold text-m py-2">{ErrorMessage}</p>
 
         <button
           className="p-4 my-6 bg-red-700 w-full rounded-lg"
