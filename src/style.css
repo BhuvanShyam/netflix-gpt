@@ -1,0 +1,24 @@
+/* Style the scrollbar for Chrome, Safari, and Opera */
+/* Make sure to include vendor prefixes for full compatibility */
+
+/* Track */
+::-webkit-scrollbar {
+    width: 1px; /* thinner width of the entire scrollbar */
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background-color: #000000; /* color of the scroll thumb */
+    border-radius: 5px; /* roundness of the scroll thumb */
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* color of the scroll thumb on hover */
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
