@@ -26,8 +26,7 @@ const Login = () => {
   const name = useRef(null);
 
   const handleButtonClick = () => {
-    // console.log(email.current.value);
-    // console.log(password.current.value);
+  
     //validate the form data
 
     const message = checkValidData(email.current.value, password.current.value);
@@ -64,7 +63,7 @@ const Login = () => {
             .catch((error) => {
               setErrorMessage(error.message);
             });
-          console.log(user);
+   
 
           // ...
         })
