@@ -10,6 +10,7 @@ import { auth } from "../utils/firebase";
 
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { BACKGROUND_URL } from "../utils/constants";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -26,7 +27,6 @@ const Login = () => {
   const name = useRef(null);
 
   const handleButtonClick = () => {
-  
     //validate the form data
 
     const message = checkValidData(email.current.value, password.current.value);
@@ -63,7 +63,6 @@ const Login = () => {
             .catch((error) => {
               setErrorMessage(error.message);
             });
-   
 
           // ...
         })
@@ -96,11 +95,7 @@ const Login = () => {
     <div>
       <Header></Header>
       <div className="absolute">
-        <img
-          className="filter brightness-50"
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/a99688ca-33c3-4099-9baa-07a2e2acb398/ca15fd28-b624-4852-8bfe-9cdd5c88475d/IN-en-20240520-popsignuptwoweeks-perspective_alpha_website_medium.jpg"
-          alt="logo"
-        />
+        <img className="filter brightness-50" src={BACKGROUND_URL} alt="logo" />
       </div>
 
       {/* //onSubmit -> used to preventbdefault function of html function in react like refreshing whole page while submiting */}
